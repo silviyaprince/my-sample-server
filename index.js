@@ -1,6 +1,7 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import 'dotenv/config'
+import { productsRouter } from "./routes/product.js";
 const app = express();
 
 app.use(express.json())
@@ -16,7 +17,7 @@ async function createConnection() {
   return client;
 }
 
-const client = await createConnection();
+export const client = await createConnection();
 
 // const products = [
 //   {
@@ -69,55 +70,8 @@ app.get("/", (req, res) => {
   res.send("Hello World hi all");
 });
 
-app.get("/products", async (req, res) => {
-  const { category, rating } = req.query;
-  
-  if(req.query.rating){
-    req.query.rating=+req.query.rating
-  }
-  const product = await client
-  .db("my-react-db")
-  .collection("products")
-  .find(req.query).toArray()
-  console.log(product)
-  res.send(product);
-});
-
-app.post("/products", async (req, res) => {
- const newProduct=req.body
-  
-  
-  const result = await client
-  .db("my-react-db")
-  .collection("products")
-  .insertMany(newProduct)
-  console.log(newProduct)
-  res.send(result);
-});
-
-
-app.get("/products/:id", async (req, res) => {
-  const { id } = req.params;
-  console.log(req.params, id);
-  const product = await client
-    .db("my-react-db")
-    .collection("products")
-    .findOne({ id: id });
-  // const product=products.find((pd)=>pd.id==id)
-  console.log(product);
-  res.send(product);
-});
-
-app.delete("/products/:id", async (req, res) => {
-  const { id } = req.params;
-  console.log(req.params, id);
-  const product = await client
-    .db("my-react-db")
-    .collection("products")
-    .deleteOne({ id: id });
- 
-  
-  res.send(product);
-});
-
 app.listen(PORT, () => console.log("server started on port", PORT));
+
+
+app.use("/products",productsRouter)
+//put render url in github tomorrow
