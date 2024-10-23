@@ -2,6 +2,7 @@ import express from "express";
 import { MongoClient } from "mongodb";
 import 'dotenv/config'
 import { productsRouter } from "./routes/product.js";
+import {usersRouter} from "./routes/users.js";
 const app = express();
 
 app.use(express.json())
@@ -74,4 +75,5 @@ app.listen(PORT, () => console.log("server started on port", PORT));
 
 
 app.use("/products",productsRouter)
+app.use("/users",usersRouter)
 //put render url in github tomorrow
