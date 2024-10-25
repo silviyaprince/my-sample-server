@@ -7,8 +7,9 @@ import {
   addProducts,
   updateProductById,
 } from "../helpers.js";
+import {auth} from "./middleware/auth.js";
 
-router.get("/", async (req, res) => {
+router.get("/",auth, async (req, res) => {
   const { category, rating } = req.query;
 
   if (req.query.rating) {

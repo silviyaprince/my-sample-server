@@ -50,4 +50,10 @@ import {client} from "./index.js";
     return await client.db("my-react-db").collection("users").findOne({username:username})
     
   }
-export {getAllProducts,getProductById,deleteProductById,addProducts,updateProductById,genPassword,createUser,getUserByName}
+
+  async function getAllUser(){
+    return await client.db("my-react-db").collection("users").find().toArray()
+    
+  }
+
+export {getAllProducts,getProductById,deleteProductById,addProducts,updateProductById,genPassword,createUser,getUserByName,getAllUser}

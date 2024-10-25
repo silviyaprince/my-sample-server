@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
-import { genPassword ,createUser,getUserByName} from "../helpers.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { genPassword ,createUser,getUserByName,getAllUser} from "../helpers.js";
 router.post("/signup", async (req, res) => {
     const {username,password} = req.body;
   const isUserExist=await getUserByName(username)
@@ -18,4 +20,28 @@ router.post("/signup", async (req, res) => {
     res.send(result);
   });
 
+
+
+  router.post("/login", async (req, res) => {
+    const {username,password} = req.body;
+  const userFromDb=await getUserByName(username)
+  if(!userFromDb){
+    res.status(400).send({message:"invalid credentials"})
+    return
+  }
+  const storedDbPassword=userFromDb.password
+ const isPasswordMatch=await bcrypt.compare(password,storedDbPassword)
+  if(!isPasswordMatch){
+    res.status(400).send({message:"invalid credentials"})
+    return
+  }
+
+  const token=jwt.sign({id:userFromDb._id},process.env.secret_key)
+    res.send({message:"login successful",token:token});
+  });
+
+router.get("/get-users",async (req,res)=>{
+  const result=await getAllUser()
+  res.send(result)
+})
   export const usersRouter = router;
